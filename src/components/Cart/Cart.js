@@ -12,9 +12,13 @@ function Cart(props) {
   //used to render the order button
   const hasItems = cartCtx.items.length > 0;
 
-  const handleRemoveFromCart = (item) => {};
+  const handleRemoveFromCart = (id) => {
+    cartCtx.removeItem(id);
+  };
 
-  const handleAddFromCart = (item) => {};
+  const handleAddFromCart = (item) => {
+    cartCtx.addItem({ ...item, amount: 1 });
+  };
 
   //dummy data
   const cartItems = (
@@ -27,7 +31,7 @@ function Cart(props) {
           amount={item.amount}
           price={item.price}
           handleRemoveFromCart={() => handleRemoveFromCart(item.id)}
-          handleAddFromCart={() => handleAddFromCart(item.id)}
+          handleAddFromCart={() => handleAddFromCart(item)}
         />
       ))}
     </ul>
