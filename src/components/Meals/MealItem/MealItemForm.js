@@ -12,7 +12,7 @@ function MealItemForm(props) {
     //using refs to bind (also added a forwardRef in Input component)
     //refs use .current to reach value (value always a string)
     const enteredAmount = amountInputRef.current.value;
-    const enteredAmountNumber = +enteredAmount; //converts string to number
+    const enteredAmountNumber = +parseFloat(enteredAmount); //converts string to number
 
     if (
       enteredAmount.trim().length === 0 ||

@@ -4,7 +4,7 @@ import CartContext from "./cart-context";
 //starting value of cart, which we return as state in cartReducer
 const defaultCartState = {
   items: [],
-  totalAmout: 0,
+  totalAmount: 0,
 };
 
 //outside component function, doesnt need any data inside and should be recreated
@@ -12,14 +12,38 @@ const defaultCartState = {
 const cartReducer = (state, action) => {
   //useReducer hook in addItemToCartHandler
   if (action.type === "ADD") {
-    //adds a new array
-    const updatedItem = state.items.concat(action.item);
-    const updatedTotalAmout =
-      state.totalAmout + action.item.price * action.item.amount;
+    const updatedTotalAmount =
+      state.totalAmount + action.item.price * action.item.amount;
+
+    //want to check if an item is already part of the array
+    const existingCartItemIndex = state.items.findIndex(
+      (item) => item.id === action.item.id
+    );
+
+    //get existing cartItem thru above index - works only if we already have it
+    const existingCartItem = state.items[existingCartItemIndex];
+
+    let updatedItem;
+    let updatedItems;
+
+    if (existingCartItem) {
+      updatedItem = {
+        ...existingCartItem,
+        amount: existingCartItem.amount + action.item.amount,
+      };
+      //update items with new array
+      updatedItems = [...state.items];
+      //overwrite old item with the updated item
+      updatedItems[existingCartItemIndex] = updatedItem;
+    } else {
+      //item added for the first time
+      updatedItem = { ...action.item };
+      updatedItems = state.items.concat(action.item); //adds a new array
+    }
 
     return {
-      items: updatedItem,
-      totalAmout: updatedTotalAmout,
+      items: updatedItems,
+      totalAmount: updatedTotalAmount,
     };
   }
   return defaultCartState;
@@ -44,7 +68,7 @@ function CartProvider(props) {
   //this will be updated over time - so this wraps the content that needs access to the object
   const cartContext = {
     items: cartState.items,
-    totalAmout: cartState.totalAmout,
+    totalAmount: cartState.totalAmount,
     addItem: addItemToCartHandler,
     removeItem: removeItemFromCartHandler,
   };
