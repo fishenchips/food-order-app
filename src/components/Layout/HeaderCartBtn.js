@@ -1,8 +1,17 @@
-import React from "react";
+import React, { useContext } from "react";
 import CartIcon from "../Cart/CartIcon";
+import CartContext from "../../store/cart-context";
 import classes from "./HeaderCartBtn.module.css";
 
 function HeaderCartBtn(props) {
+  //whenever CartContex changes, this component will be re-evaluated, which we do in the CartProvider.js
+  const cartCtx = useContext(CartContext);
+
+  //reduce transforms array to single value (2 arguments, function, and starting Value)
+  const numberOfCartItems = cartCtx.items.reduce((curNumber, item) => {
+    return curNumber + item.amount;
+  }, 0);
+
   return (
     <button className={classes.button} onClick={props.showCartHandler}>
       <span className={classes.icon}>
@@ -10,7 +19,7 @@ function HeaderCartBtn(props) {
         <CartIcon />
       </span>
       <span> Your Cart</span>
-      <span className={classes.badge}>3</span>
+      <span className={classes.badge}>{numberOfCartItems}</span>
     </button>
   );
 }
